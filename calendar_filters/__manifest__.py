@@ -11,7 +11,7 @@
 		'views/calendar_view.xml',
 	],
 	'qweb': [
-		'static/src/xml/*.xml',
+		'static/src/xml/calendar.xml',
 	],
 	"auto_install": False,
 	"installable": True,
