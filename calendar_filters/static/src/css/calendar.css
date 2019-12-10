@@ -1,18 +1,75 @@
 
-.pink > a { 
-    background-color: pink !important;
-    background-image:none !important;
+.pink > a {
+	background-color: pink !important;
+	background-image:none !important;
 }
 
 .green > a { 
-    background-color: green !important;
-    background-image: none !important;
+	background-color: green !important;
+	background-image: none !important;
+	color: white !important;
+
 }
 
-.ui-datepicker-group{
-	width: 25%;
-    line-height: 2;
+.yellow > a { 
+	background-color: yellow !important;
+	background-image: none !important;
 }
-.ui-datepicker-inline{
+
+.orange > a { 
+	background-color: orange !important;
+	background-image: none !important;
+	/* color: white !important; */
+}
+
+.blue > a { 
+	background-color: blue !important;
+	background-image: none !important;
+	color: white !important;
+}
+
+.mydate-inline{
 	width: 100% !important;
 }
+
+.mydate-group{
+	border: 1px solid #e9e9e9;
+	line-height: 2;
+}
+
+.mydate-state{
+	min-height: 70px !important;
+	min-width: 70px !important;
+}
+
+
+/*.raghavb {
+	display: block;
+	font-size: 12px !important;
+	line-height: normal;
+}*/
+
+/*.ui-datepicker .ui-state-default {
+  background: #FEA;
+  min-height: 80px !important;
+	min-width: 80px !important;
+}*/
+.mydate-state[data-custom] {
+  position: relative;
+  padding-bottom: 10px;
+}
+.mydate-state[data-custom]::after {
+	content: attr(data-custom);
+	display: block;
+	font-size: 12px !important;
+	line-height: normal;
+}
+
+/*table.ui-datepicker-calendar tbody td{
+	width: 85px;
+	height: auto;
+	font: 25pt Arial, sans-serif;
+}
+
+
+

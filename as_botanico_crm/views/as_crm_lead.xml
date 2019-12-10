@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="as_crm_stage_custom_fields_form" model="ir.ui.view">
+            <field name="name">inherited.crm.stage.custom.form</field>
+            <field name="model">crm.stage</field>
+            <field name="inherit_id" ref="crm.crm_stage_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="before">
+                    <!-- <button name="as_transfer_green_done" string="Procesar Ganados" class="oe_highlight" type="object" confirm="Esta fase procesara las oportunidades REALIZADAS, procedemos?"/> -->
+                    <button name="activar_realizado" string="Fase Realizado" class="oe_highlight" type="object" confirm="Esta fase se clasificara como REALIZADA, procedemos?"/>
+                    <field name="as_done"/>
+                    <button name="activar_ganado" string="Fase Ganado" class="oe_highlight" type="object" confirm="Esta fase se clasificara como GANADO, procedemos?"/>
+                    <field name="as_win"/>                    
+                </xpath>
+            </field>
+        </record>
+
+        <record id="as_crm_stage_custom_fields_tree" model="ir.ui.view">
+            <field name="name">inherited.crm.stage.custom.tree</field>
+            <field name="model">crm.stage</field>
+            <field name="inherit_id" ref="crm.crm_stage_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='team_id']" position="after">
+                    <field name="as_done"/>
+                    <field name="as_win"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="as_crm_lead_custom_fields_tree" model="ir.ui.view">
+            <field name="name">inherited.crm.lead.custom.tree</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='create_date']" position="after">
+                    <field name="date_event"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Group by date_event/ -->
+        <record id="as_crm_lead_custom_search" model="ir.ui.view">   
+            <field name="name">inherited.crm.lead.custom.search.view</field>   
+            <field name="model">crm.lead</field>   
+            <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr='/search/group[1]' position="inside">
+                    <filter string="Fecha Evento" domain="[]" context="{'group_by':'date_event'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

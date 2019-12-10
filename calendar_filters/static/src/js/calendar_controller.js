@@ -1,17 +1,17 @@
 odoo.define('calendar_filters.calendar_controller', function (require) {
-"use strict";
+	"use strict";
 
 
-var AbstractController = require('web.AbstractController');
-var QuickCreate = require('web.CalendarQuickCreate');
-var dialogs = require('web.view_dialogs');
-var Dialog = require('web.Dialog');
-var core = require('web.core');
-var CalendarController = require('web.CalendarController');
+	var AbstractController = require('web.AbstractController');
+	var QuickCreate = require('web.CalendarQuickCreate');
+	var dialogs = require('web.view_dialogs');
+	var Dialog = require('web.Dialog');
+	var core = require('web.core');
+	var CalendarController = require('web.CalendarController');
 
-var _t = core._t;
-var QWeb = core.qweb;
-var current_scale = '';
+	var _t = core._t;
+	var QWeb = core.qweb;
+	var current_scale = '';
 
 	CalendarController.include({
 
@@ -33,7 +33,7 @@ var current_scale = '';
 			var events = {};
 			var date_start = false;
 			var date_stop = false;
-			var fields = ['name'];
+			var fields = ['name','color'];
 			var context = {};
 			if (self.mapping.date_start) {
 				date_start = self.mapping.date_start;
@@ -80,19 +80,36 @@ var current_scale = '';
 				domain: [],
 				fields : fields,
 			},{async:false}).then(function (output) {
+				console.log("largo: " + output.length);
+				
 				$.each(output, function( index, value ) {
+					var color_codigo = '';
+					var color_evento = '';
+					color_codigo = value.color;
+					if (color_codigo == 2) {
+						// console.log("yellow: " + JSON.stringify(color_codigo));
+						color_evento = 'orange'
+					} 
+					if (color_codigo == 4) {
+						// console.log("blue: " + JSON.stringify(color_codigo));
+						color_evento = 'blue'
+					} 
+					if (color_codigo == 10) {
+						// console.log("green: " + JSON.stringify(color_codigo));
+						color_evento = 'green'
+					}
 					if(date_stop){
 						if(date_stop in value) {
 							if(value[date_stop]){
-								const dates = getDatesBetween(new Date(value[date_start]), new Date(value[date_stop])); 
+								const dates = getDatesBetween(new Date(value[date_start]), new Date(value[date_stop]));
 								$.each(dates, function( index, v1 ) {
 									if(v1 in events)
 									{
 										events[v1]['ids'].push(value['id']);
-										events[v1]['text'] += "  (2nd):" + value['name'];
+										events[v1]['text'] += "  (&):" + value['name'];
 									}
 									else{
-										events[v1] = new Event(value['name'], "pink",[value['id']]);
+										events[v1] = new Event(value['name'], color_evento,[value['id']]);
 									}
 								});
 							}
@@ -101,12 +118,15 @@ var current_scale = '';
 					else{
 						if(date_start in value){
 							if(value[date_start]){
-								var new_dt = value[date_start].substring(0, 10);
+								// console.log("value[date_start]: " + JSON.stringify(value[date_start]));
+								// var new_dt = value[date_start].substring(0, 10);
+								var new_dt = value.date_event.substring(0, 10);
 								if(new_dt in events){
 									events[new_dt]['ids'].push(value['id']);
-									events[new_dt]['text'] += "  (2nd):" + value['name'];
+									events[new_dt]['text'] += "  (&):" + value['name'];
 								}else{
-									events[new_dt] = new Event(value['name'], "pink",[value['id']]);
+									events[new_dt] = new Event(value['name'], color_evento,[value['id']]);
+									// console.log("color_evento: " + JSON.stringify(color_evento));
 								}
 							}
 						}
@@ -116,7 +136,7 @@ var current_scale = '';
 
 			_.each(['prev', 'today', 'next'], function (action) {
 				self.$buttons.on('click', '.o_calendar_button_' + action, function () {
-					if(current_scale =='year')	
+					if(current_scale =='year')
 					{	if(action =='today')
 						{
 							year1 = (new Date).getFullYear();
@@ -129,7 +149,7 @@ var current_scale = '';
 							{
 								year1 = year1 + 1;
 							}
-						}					
+						}
 						$('#datepicker').datepicker('option', 'minDate', new Date(year1, 0, 1));
 						$('#datepicker').datepicker('option', 'maxDate', new Date(year1, 11, 31));
 						$("ol .breadcrumb").find('.active').text(year1);
@@ -144,28 +164,33 @@ var current_scale = '';
 			});
 			_.each(['day', 'week', 'month','year'], function (scale) {
 				self.$buttons.on('click', '.o_calendar_button_' + scale, function () {
-					if(scale =='year')	
+					if(scale =='year')
 					{
 						self.$buttons.find('.o_calendar_button_' + scale).removeClass('active');
 						$('.o_calendar_button_year').addClass('active');
-						$(".o_calendar_view").find('.o_calendar_widget').hide(); 
-						$(".o_calendar_view").find('.o_calendar_buttons').hide(); 
-						$(".o_calendar_container").find('.o_calendar_sidebar_container').hide(); 
-						 
-						$('.o_calendar_view').append('<div id="datepicker"></div>');
+						$(".o_calendar_view").find('.o_calendar_widget').hide();
+						$(".o_calendar_view").find('.o_calendar_buttons').hide();
+						$(".o_calendar_container").find('.o_calendar_sidebar_container').hide();
+
+						$('.o_calendar_view').append('<div id="datepicker" class="mydate"></div>');
 						if($("#datepicker").length == 0) {
-							$('.o_calendar_view').append('<div id="datepicker" style="display:flex;"></div>');
+							$('.o_calendar_view').append('<div id="datepicker" class="mydate"></div>');
 						} else {
 							$(".o_calendar_view").find('#datepicker').show();
 						}
+						$('.mydate').find('.ui-datepicker-inline').addClass('mydate-inline');							
+
 						
 						$("#datepicker").datepicker({
-							numberOfMonths: [3, 4],
-							showWeek: true,
+							numberOfMonths: [4, 3],
+							// showWeek: true,
 							firstDay: 1,
 							minDate: new Date(year1, 0, 1),
 							maxDate: new Date(year1, 11, 31),
+							autoSize: true,
+
 							onSelect: function(dateText, inst) {
+								var qq = $(this).text();
 								var date = $(this).val();
 								var selectdate =  format_date(new Date(date));
 								if (selectdate in events){
@@ -174,7 +199,6 @@ var current_scale = '';
 									var myArr = Array.from(set4);
 									ids = myArr;
 									if(ids.length > 1){
-										// self.model.setDate(moment(new Date(date)));
 										self.do_action({
 											type: 'ir.actions.act_window',
 											res_model: self.modelName,
@@ -184,6 +208,7 @@ var current_scale = '';
 											target: 'current',
 											domain:[['id','in',ids]]
 										});
+										
 									}
 									else{
 										self.do_action({
@@ -193,7 +218,9 @@ var current_scale = '';
 											res_id: ids[0],
 											target: 'new'
 										});
+										
 									}
+								
 								}else{
 									if(self.mapping.date_start){
 										context['default_' + self.mapping.date_start] = selectdate+" "+"00:00:00" || null;
@@ -215,18 +242,33 @@ var current_scale = '';
 												fields : fields,
 											},{async:false}).then(function (output) {
 												$.each(output, function( index, value ) {
+													var color_codigo = '';
+													var color_evento = '';
+													color_codigo = value.color;
+													if (color_codigo == 2) {
+														// console.log("yellow: " + JSON.stringify(color_codigo));
+														color_evento = 'orange'
+													} 
+													if (color_codigo == 4) {
+														// console.log("blue: " + JSON.stringify(color_codigo));
+														color_evento = 'blue'
+													} 
+													if (color_codigo == 10) {
+														// console.log("green: " + JSON.stringify(color_codigo));
+														color_evento = 'green'
+													}
 													if(date_stop){
 														if(date_stop in value) {
 															if(value[date_stop]){
-																const dates = getDatesBetween(new Date(value[date_start]), new Date(value[date_stop])); 
+																const dates = getDatesBetween(new Date(value[date_start]), new Date(value[date_stop]));
 																$.each(dates, function( index, v1 ) {
 																	if(v1 in events)
 																	{
 																		events[v1]['ids'].push(value['id']);
-																		events[v1]['text'] += "  (2nd):" + value['name'];
+																		events[v1]['text'] += "  (&):" + value['name'];
 																	}
 																	else{
-																		events[v1] = new Event(value['name'], "pink",[value['id']]);
+																		events[v1] = new Event(value['name'], color_evento,[value['id']]);
 																	}
 																});
 															}
@@ -235,12 +277,15 @@ var current_scale = '';
 													else{
 														if(date_start in value){
 															if(value[date_start]){
-																var new_dt = value[date_start].substring(0, 10);
+																// console.log("value[date_start]: " + JSON.stringify(value[date_start]));
+																// var new_dt = value[date_start].substring(0, 10);
+																var new_dt = value.date_event.substring(0, 10);
 																if(new_dt in events){
 																	events[new_dt]['ids'].push(value['id']);
-																	events[new_dt]['text'] += "  (2nd):" + value['name'];
+																	events[new_dt]['text'] += "  (&):" + value['name'];
 																}else{
-																	events[new_dt] = new Event(value['name'], "pink",[value['id']]);
+																	events[new_dt] = new Event(value['name'], color_evento,[value['id']]);
+																	// console.log("color_evento: " + JSON.stringify(color_evento));
 																}
 															}
 														}
@@ -248,19 +293,28 @@ var current_scale = '';
 												});
 											});
 											$("#datepicker").datepicker('option', 'beforeShowDay', renderCalendarCallback);
+											
 										},
 									}).open();
+									$( "#datepicker" ).datepicker("refresh");
+									
 								}
 							},
+
+							
 						});
 
-						$("#datepicker").datepicker('option', 'beforeShowDay', renderCalendarCallback);
+						$('.mydate').find('.ui-datepicker-inline').addClass('mydate-inline');
+						$('.mydate-inline').find('.ui-datepicker-group').addClass('mydate-group');
+						$('.mydate').find('.ui-state-default').addClass('mydate-state');
 
+						$("#datepicker").datepicker('option', 'beforeShowDay', renderCalendarCallback);
+						addCustomInformation();
 						function renderCalendarCallback(date) {
 							var year = date.getFullYear(),
 							month = ("0" + (date.getMonth() + 1)).slice(-2),
 							day = ("0" + (date.getDate())).slice(-2);
-
+							addCustomInformation();
 							var formatted = format_date(date);
 							var event = events[formatted];
 							if (event) {
@@ -291,6 +345,35 @@ var current_scale = '';
 					
 				});
 			});
+
+			function addCustomInformation() {
+				setTimeout(function() {
+					$('.mydate').find('.ui-datepicker-inline').addClass('mydate-inline');
+					$('.mydate').find('.ui-datepicker-group').addClass('mydate-group');
+					$('.mydate').find('.ui-state-default').addClass('mydate-state');
+
+					var aa = $(".ui-datepicker-calendar td").each(function() {
+						var selected_month = parseInt($(this).attr('data-month')) + 1;
+						var selected_year = $(this).attr('data-year');
+						var date = $(this).text();
+						if (selected_month   < 10) {selected_month   = "0"+selected_month;}
+						if (date < 10) {date = "0"+date;}
+						
+						var fdate = selected_year + '-' + selected_month + '-' + date;
+						if(date){
+							var event = events[fdate.toString()];
+							if (event) {
+								var txt = event['text'];
+								if(txt.length > 30)
+									txt = txt.slice(0,20)
+
+								$(this).find(".mydate-state").attr('data-custom', txt);
+								// $(this).find("a").append('<span class="raghavb">'+ event['text']+'</span>')
+							}
+						}
+					})
+				}, 0)
+			}
 
 
 			if ($node) {
