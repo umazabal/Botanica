@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <odoo>
+        <data>
+            <record id="inherit_crm_lead_extended_view_kanban_add_fields" model="ir.ui.view">
+                <field name="name">inherit.crm.lead.extended.view.kanban.add.fields</field>
+                <field name="model">crm.lead</field>
+                <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//field[@name='partner_id']" position="after">
+                        <field name="date_event" string="Date event"/>
+                        <field name="meet_qty" string="Number of assistants"/>
+                    </xpath>
+                    <xpath expr="//div[hasclass('oe_kanban_content')]/div[3]" position="after">
+                        <div class="o_kanban_primary_left">
+                            <div class="o_primary">
+                                <span t-if="record.date_event.value">
+                                    <strong><t t-esc="'Fecha evento:'"/></strong>
+                                    <t t-esc="record.date_event.value"/>
+                                </span>
+                                <span t-if="record.meet_qty.value">
+                                    <strong><t t-esc="'Asistencia:'"/></strong>
+                                    <t t-esc="record.meet_qty.value"/>
+                                </span>
+                            </div>
+                        </div>
+                    </xpath>
+                </field>
+            </record>
+            <record id="inherit_crm_lead_view_add_page_contacts" model="ir.ui.view">
+                <field name="name">inherit.crm.lead.view.add.page.contacts</field>
+                <field name="model">crm.lead</field>
+                <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//notebook" position="inside">
+                        <page string="Contacts" name="crm_contact">
+                            <field colspan="4" name="contact_ids" widget="many2many_kanban">
+                                <kanban quick_create="false" create="true" delete="true">
+                                    <field name="name"/>
+                                    <field name="phone"/>
+                                    <field name="color"/>
+                                    <field name="image"/>
+                                    <field name="mobile"/>
+                                    <field name="function"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                            <div style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                <div class="o_kanban_image">
+                                                    <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <field name="name"/>
+                                                    <div t-if="record.email.raw_value"><field name="email" widget="email"/></div>
+                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
+                                                    <div t-if="record.function.raw_value">Function: <field name="function"/></div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </xpath>
+                </field>
+            </record>
+        </data>
+    </odoo>

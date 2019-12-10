@@ -1,0 +1,94 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* crm_lead_custom
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-02 23:09+0000\n"
+"PO-Revision-Date: 2019-04-02 23:09+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: crm_lead_custom
+#: selection:crm.stage,color_index:0
+msgid "Blue"
+msgstr "Azul"
+
+#. module: crm_lead_custom
+#: model:ir.ui.view,arch_db:crm_lead_custom.inherited_crm_stage_custom_fields_form
+msgid "Color"
+msgstr "Color"
+
+#. module: crm_lead_custom
+#: model:ir.model.fields,field_description:crm_lead_custom.field_crm_lead_date_event
+msgid "Date Event"
+msgstr "Fecha de evento"
+
+#. module: crm_lead_custom
+#: model:ir.ui.view,arch_db:crm_lead_custom.inherited_crm_lead_custom_fields_form
+msgid "Date event"
+msgstr "Fecha de evento"
+
+#. module: crm_lead_custom
+#: selection:crm.stage,color_index:0
+msgid "Green"
+msgstr "Verde"
+
+#. module: crm_lead_custom
+#: model:ir.model.fields,field_description:crm_lead_custom.field_crm_stage_color_index
+msgid "Kanban Color"
+msgstr "Color en kanban"
+
+#. module: crm_lead_custom
+#: model:ir.model,name:crm_lead_custom.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Iniciativa/Oportunidad"
+
+#. module: crm_lead_custom
+#: model:ir.model.fields,field_description:crm_lead_custom.field_crm_lead_meet_qty
+msgid "Meet Qty"
+msgstr "Número de asistentes"
+
+#. module: crm_lead_custom
+#: model:ir.ui.view,arch_db:crm_lead_custom.inherited_crm_lead_custom_fields_form
+msgid "Number of assistants"
+msgstr "Número de asistentes"
+
+#. module: crm_lead_custom
+#: selection:crm.stage,color_index:0
+msgid "Orange"
+msgstr "Naranja"
+
+#. module: crm_lead_custom
+#: model:ir.model,name:crm_lead_custom.model_crm_stage
+msgid "Stage of case"
+msgstr "Etapa del caso"
+
+#. module: crm_lead_custom
+#: selection:crm.stage,color_index:0
+msgid "White"
+msgstr "Blanco"
+
+#. module: crm_lead_custom
+#: selection:crm.stage,color_index:0
+msgid "Yellow"
+msgstr "Amarillo"
+
+#. module: crm_lead_custom
+#: code:addons/crm_lead_custom/models/crm_lead.py:47
+#, python-format
+msgid "You can not create more that one event, into the same date for leads"
+msgstr "No puedes crear más de un evento para la misma fecha."
+
+#. module: crm_lead_custom
+#: code:addons/crm_lead_custom/models/crm_lead.py:62
+#, python-format
+msgid "You cannot create more opportunities, chosen event date is blocked."
+msgstr "No puedes crear más oportunidades, la fecha elegida está bloqueada."
+
